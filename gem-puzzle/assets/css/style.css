@@ -110,6 +110,8 @@ a:active {
 .puzzle {
   text-align: center;
   padding: 30px 0;
+  height: 100%;
+  background: url(./../img/bg.png) repeat center/cover;
 }
 .puzzle__btn {
   padding: 5px 12px;
@@ -145,6 +147,18 @@ a:active {
   justify-content: space-evenly;
   align-content: space-evenly;
 }
+.puzzle__field::before {
+  content: "";
+  position: absolute;
+  width: 100vw;
+  background: rgba(65, 166, 255, 0.5098039216);
+  top: 0;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: 0;
+  cursor: default;
+}
 .puzzle__block {
   position: absolute;
   display: flex;
@@ -158,6 +172,9 @@ a:active {
   justify-content: center;
   align-items: center;
   transition: all 0.2s;
+}
+.puzzle__block:hover {
+  box-shadow: inset 0px 2px 14px 5px rgba(0, 0, 0, 0.5);
 }
 .puzzle__current-size {
   margin-top: 25px;

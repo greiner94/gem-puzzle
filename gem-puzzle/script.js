@@ -86,6 +86,77 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/js/modules/NumsAvailabledToClick.js":
+/*!*************************************************!*\
+  !*** ./src/js/modules/NumsAvailabledToClick.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function NumsAvailabledToClick(array) {
+  let NumsAvailabledToClick = [];
+  let NuNis = {};
+
+  for (let i = 0; i < array.length; i++) {
+    for (let j = 0; j < array.length; j++) {
+      if (Number.isNaN(array[i][j])) {
+        NuNis.i = i;
+        NuNis.j = j;
+      }
+    }
+  }
+
+  switch (NuNis.i) {
+    case 0:
+      {
+        NumsAvailabledToClick.push(array[NuNis.i + 1][NuNis.j]);
+        NumsAvailabledToClick.push(100 / array.length);
+        break;
+      }
+
+    case array.length - 1:
+      {
+        NumsAvailabledToClick.push(array[NuNis.i - 1][NuNis.j]);
+        break;
+      }
+
+    default:
+      {
+        NumsAvailabledToClick.push(array[NuNis.i + 1][NuNis.j]);
+        NumsAvailabledToClick.push(array[NuNis.i - 1][NuNis.j]);
+      }
+  }
+
+  switch (NuNis.y) {
+    case 0:
+      {
+        NumsAvailabledToClick.push(array[NuNis.i][NuNis.j + 1]);
+        break;
+      }
+
+    case array.length - 1:
+      {
+        NumsAvailabledToClick.push(array[NuNis.i][NuNis.j - 1]);
+        break;
+      }
+
+    default:
+      {
+        NumsAvailabledToClick.push(array[NuNis.i][NuNis.j + 1]);
+        NumsAvailabledToClick.push(array[NuNis.i][NuNis.j - 1]);
+      }
+  }
+
+  NumsAvailabledToClick = NumsAvailabledToClick.filter(elem => elem);
+  return NumsAvailabledToClick;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (NumsAvailabledToClick);
+
+/***/ }),
+
 /***/ "./src/js/modules/createField.js":
 /*!***************************************!*\
   !*** ./src/js/modules/createField.js ***!
@@ -175,6 +246,71 @@ function createField(size = 4) {
 
 /***/ }),
 
+/***/ "./src/js/modules/isGameWin.js":
+/*!*************************************!*\
+  !*** ./src/js/modules/isGameWin.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function isGameWin(array) {
+  let checker = 0;
+
+  if (Number.isNaN(array[array.length - 1][array.length - 1])) {
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < array.length; j++) {
+        checker = checker + 1;
+        console.log(array[i][j], checker);
+
+        if (i == array.length - 1 && j == array.length - 1) {
+          continue;
+        }
+
+        if (array[i][j] !== checker) {
+          return false;
+        }
+      }
+    }
+  } else {
+    return false;
+  }
+
+  console.log('You WIN!');
+  return true;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (isGameWin);
+
+/***/ }),
+
+/***/ "./src/js/modules/movesAndTime.js":
+/*!****************************************!*\
+  !*** ./src/js/modules/movesAndTime.js ***!
+  \****************************************/
+/*! exports provided: moves */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moves", function() { return moves; });
+function moves() {
+  const movesField = document.querySelector('.puzzle__moves span');
+  const gameBlocks = document.querySelectorAll('.puzzle__block');
+  let movesCounter = 1;
+
+  if (!movesField.textContent) {
+    movesField.textContent = 1;
+  } else {
+    movesField.textContent = +movesField.textContent + 1;
+  }
+}
+
+
+
+/***/ }),
+
 /***/ "./src/js/modules/movesControl.js":
 /*!****************************************!*\
   !*** ./src/js/modules/movesControl.js ***!
@@ -184,77 +320,26 @@ function createField(size = 4) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _isGameWin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isGameWin */ "./src/js/modules/isGameWin.js");
+/* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
+/* harmony import */ var _NumsAvailabledToClick__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NumsAvailabledToClick */ "./src/js/modules/NumsAvailabledToClick.js");
+
+
+
+
 function movesControl(arr) {
-  let array = arr;
+  let array = arr; // console.log(NumsAvailabledToClick(array));
 
-  function NumsAvailabledToClick(array) {
-    let NumsAvailabledToClick = [];
-    let NuNis = {};
-
-    for (let i = 0; i < array.length; i++) {
-      for (let j = 0; j < array.length; j++) {
-        if (Number.isNaN(array[i][j])) {
-          NuNis.i = i;
-          NuNis.j = j;
-        }
-      }
-    }
-
-    switch (NuNis.i) {
-      case 0:
-        {
-          NumsAvailabledToClick.push(array[NuNis.i + 1][NuNis.j]);
-          NumsAvailabledToClick.push(100 / array.length);
-          break;
-        }
-
-      case array.length - 1:
-        {
-          NumsAvailabledToClick.push(array[NuNis.i - 1][NuNis.j]);
-          break;
-        }
-
-      default:
-        {
-          NumsAvailabledToClick.push(array[NuNis.i + 1][NuNis.j]);
-          NumsAvailabledToClick.push(array[NuNis.i - 1][NuNis.j]);
-        }
-    }
-
-    switch (NuNis.y) {
-      case 0:
-        {
-          NumsAvailabledToClick.push(array[NuNis.i][NuNis.j + 1]);
-          break;
-        }
-
-      case array.length - 1:
-        {
-          NumsAvailabledToClick.push(array[NuNis.i][NuNis.j - 1]);
-          break;
-        }
-
-      default:
-        {
-          NumsAvailabledToClick.push(array[NuNis.i][NuNis.j + 1]);
-          NumsAvailabledToClick.push(array[NuNis.i][NuNis.j - 1]);
-        }
-    }
-
-    NumsAvailabledToClick = NumsAvailabledToClick.filter(elem => elem);
-    return NumsAvailabledToClick;
-  }
-
-  console.log(NumsAvailabledToClick(array));
   const fieldElems = document.querySelectorAll('.puzzle__block');
   const nunElem = document.querySelector('.hidden');
   fieldElems.forEach(elem => {
     elem.addEventListener('click', () => {
-      if (NumsAvailabledToClick(array).includes(+elem.textContent.trim())) {
+      if (Object(_NumsAvailabledToClick__WEBPACK_IMPORTED_MODULE_2__["default"])(array).includes(+elem.textContent.trim())) {
         let nunStyles = nunElem.style.cssText;
         let elemStyles = elem.style.cssText;
         nunElem.style.cssText = elemStyles;
         elem.style.cssText = nunStyles;
+        Object(_movesAndTime__WEBPACK_IMPORTED_MODULE_1__["moves"])();
 
         for (let i = 0; i < array.length; i++) {
           for (let j = 0; j < array.length; j++) {
@@ -270,6 +355,7 @@ function movesControl(arr) {
         }
 
         console.log(array);
+        Object(_isGameWin__WEBPACK_IMPORTED_MODULE_0__["default"])(array);
       }
     });
   });
@@ -326,7 +412,7 @@ function renderBaseStructure() {
                     <span class="puzzle__size-variant" id="variant-7">7x7</span>
                     <span class="puzzle__size-variant" id="variant-8">8x8</span>
                 </div>
-            </div>
+            </.div>
         </div>
     `;
 }
@@ -361,7 +447,6 @@ function renderField(array) {
                 <div 
                     class="puzzle__block 
                     hidden"
-                    id="block-${array[i][j]}"
                     style="top: ${top}%; left: ${left}%; width: ${blockSize}%; height: ${blockSize}%;">${array[i][j]}
                 </div>
                 `;
@@ -372,7 +457,6 @@ function renderField(array) {
       arrString += `
             <div 
             class="puzzle__block" 
-            id="block-${array[i][j]}"
             style="top: ${top}%; left: ${left}%; width: ${blockSize}%; height: ${blockSize}%;">${array[i][j]}
         </div>
                 `;
@@ -389,6 +473,67 @@ function renderField(array) {
 
 /***/ }),
 
+/***/ "./src/js/modules/sizeBtns.js":
+/*!************************************!*\
+  !*** ./src/js/modules/sizeBtns.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _renderField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderField */ "./src/js/modules/renderField.js");
+/* harmony import */ var _movesControl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./movesControl */ "./src/js/modules/movesControl.js");
+/* harmony import */ var _createField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createField */ "./src/js/modules/createField.js");
+
+
+
+
+function sizeBtns() {
+  const sizeBtns = document.querySelectorAll('.puzzle__size-variant');
+  const currentSizeVariant = document.querySelector('.puzzle__current-size-variant');
+  sizeBtns.forEach(elem => {
+    elem.addEventListener('click', e => {
+      const checkedFieldSize = +e.target.id.slice(-1);
+      let array = Object(_createField__WEBPACK_IMPORTED_MODULE_2__["default"])(checkedFieldSize);
+      Object(_renderField__WEBPACK_IMPORTED_MODULE_0__["default"])(array);
+      Object(_movesControl__WEBPACK_IMPORTED_MODULE_1__["default"])(array);
+      currentSizeVariant.textContent = `${checkedFieldSize}x${checkedFieldSize}`;
+    });
+  });
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (sizeBtns);
+
+/***/ }),
+
+/***/ "./src/js/modules/startGameBtn.js":
+/*!****************************************!*\
+  !*** ./src/js/modules/startGameBtn.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
+
+
+function startGameBtn() {
+  const startBtn = document.querySelector('#start-btn');
+  const isFirstGameStart = !document.querySelector('.puzzle__moves span').textContent;
+  startBtn.addEventListener('click', () => {
+    if (isFirstGameStart) {
+      console.log('111');
+      Object(_movesAndTime__WEBPACK_IMPORTED_MODULE_0__["moves"])();
+    }
+  });
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (startGameBtn);
+
+/***/ }),
+
 /***/ "./src/js/script.js":
 /*!**************************!*\
   !*** ./src/js/script.js ***!
@@ -402,6 +547,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_createField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/createField */ "./src/js/modules/createField.js");
 /* harmony import */ var _modules_renderField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/renderField */ "./src/js/modules/renderField.js");
 /* harmony import */ var _modules_movesControl__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/movesControl */ "./src/js/modules/movesControl.js");
+/* harmony import */ var _modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/sizeBtns */ "./src/js/modules/sizeBtns.js");
+/* harmony import */ var _modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/startGameBtn */ "./src/js/modules/startGameBtn.js");
+
+
 
 
 
@@ -411,6 +560,7 @@ document.addEventListener('DOMContentLoaded', event => {
   Object(_modules_renderBaseStructure__WEBPACK_IMPORTED_MODULE_0__["default"])();
   Object(_modules_renderField__WEBPACK_IMPORTED_MODULE_2__["default"])(array);
   Object(_modules_movesControl__WEBPACK_IMPORTED_MODULE_3__["default"])(array);
+  Object(_modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__["default"])(); // startGameBtn();
 });
 
 /***/ })
