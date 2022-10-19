@@ -165,13 +165,118 @@ function createField(size = 4) {
     let res = createArray(size);
 
     if (checkArray(res)) {
-      console.log(res);
+      console.log('created array field:', res);
       return res;
     }
   }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (createField);
+
+/***/ }),
+
+/***/ "./src/js/modules/movesControl.js":
+/*!****************************************!*\
+  !*** ./src/js/modules/movesControl.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function movesControl(arr) {
+  let array = arr;
+
+  function NumsAvailabledToClick(array) {
+    let NumsAvailabledToClick = [];
+    let NuNis = {};
+
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < array.length; j++) {
+        if (Number.isNaN(array[i][j])) {
+          NuNis.i = i;
+          NuNis.j = j;
+        }
+      }
+    }
+
+    switch (NuNis.i) {
+      case 0:
+        {
+          NumsAvailabledToClick.push(array[NuNis.i + 1][NuNis.j]);
+          NumsAvailabledToClick.push(100 / array.length);
+          break;
+        }
+
+      case array.length - 1:
+        {
+          NumsAvailabledToClick.push(array[NuNis.i - 1][NuNis.j]);
+          break;
+        }
+
+      default:
+        {
+          NumsAvailabledToClick.push(array[NuNis.i + 1][NuNis.j]);
+          NumsAvailabledToClick.push(array[NuNis.i - 1][NuNis.j]);
+        }
+    }
+
+    switch (NuNis.y) {
+      case 0:
+        {
+          NumsAvailabledToClick.push(array[NuNis.i][NuNis.j + 1]);
+          break;
+        }
+
+      case array.length - 1:
+        {
+          NumsAvailabledToClick.push(array[NuNis.i][NuNis.j - 1]);
+          break;
+        }
+
+      default:
+        {
+          NumsAvailabledToClick.push(array[NuNis.i][NuNis.j + 1]);
+          NumsAvailabledToClick.push(array[NuNis.i][NuNis.j - 1]);
+        }
+    }
+
+    NumsAvailabledToClick = NumsAvailabledToClick.filter(elem => elem);
+    return NumsAvailabledToClick;
+  }
+
+  console.log(NumsAvailabledToClick(array));
+  const fieldElems = document.querySelectorAll('.puzzle__block');
+  const nunElem = document.querySelector('.hidden');
+  fieldElems.forEach(elem => {
+    elem.addEventListener('click', () => {
+      if (NumsAvailabledToClick(array).includes(+elem.textContent.trim())) {
+        let nunStyles = nunElem.style.cssText;
+        let elemStyles = elem.style.cssText;
+        nunElem.style.cssText = elemStyles;
+        elem.style.cssText = nunStyles;
+
+        for (let i = 0; i < array.length; i++) {
+          for (let j = 0; j < array.length; j++) {
+            if (array[i][j] == elem.textContent.trim()) {
+              array[i][j] = NaN;
+              continue;
+            }
+
+            if (Number.isNaN(array[i][j])) {
+              array[i][j] = +elem.textContent.trim();
+            }
+          }
+        }
+
+        console.log(array);
+      }
+    });
+  });
+  return array;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (movesControl);
 
 /***/ }),
 
@@ -242,16 +347,39 @@ __webpack_require__.r(__webpack_exports__);
 function renderField(array) {
   const field = document.querySelector('.puzzle__field');
   let arrString = '';
+  let left = 0;
+  let top = 0;
+  let step = 100 / array.length;
+  let blockSize = step;
 
   for (let i = 0; i < array.length; i++) {
+    left = 0;
+
     for (let j = 0; j < array.length; j++) {
       if (Number.isNaN(array[i][j])) {
-        arrString += `<div class="puzzle__block hidden">${array[i][j]}</div>`;
+        arrString += `
+                <div 
+                    class="puzzle__block 
+                    hidden"
+                    id="block-${array[i][j]}"
+                    style="top: ${top}%; left: ${left}%; width: ${blockSize}%; height: ${blockSize}%;">${array[i][j]}
+                </div>
+                `;
+        left += step;
         continue;
       }
 
-      arrString += `<div class="puzzle__block">${array[i][j]}</div>`;
+      arrString += `
+            <div 
+            class="puzzle__block" 
+            id="block-${array[i][j]}"
+            style="top: ${top}%; left: ${left}%; width: ${blockSize}%; height: ${blockSize}%;">${array[i][j]}
+        </div>
+                `;
+      left += step;
     }
+
+    top += step;
   }
 
   field.innerHTML = arrString;
@@ -273,13 +401,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_renderBaseStructure__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/renderBaseStructure */ "./src/js/modules/renderBaseStructure.js");
 /* harmony import */ var _modules_createField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/createField */ "./src/js/modules/createField.js");
 /* harmony import */ var _modules_renderField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/renderField */ "./src/js/modules/renderField.js");
+/* harmony import */ var _modules_movesControl__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/movesControl */ "./src/js/modules/movesControl.js");
+
 
 
 
 document.addEventListener('DOMContentLoaded', event => {
-  const array = Object(_modules_createField__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  let array = Object(_modules_createField__WEBPACK_IMPORTED_MODULE_1__["default"])();
   Object(_modules_renderBaseStructure__WEBPACK_IMPORTED_MODULE_0__["default"])();
   Object(_modules_renderField__WEBPACK_IMPORTED_MODULE_2__["default"])(array);
+  Object(_modules_movesControl__WEBPACK_IMPORTED_MODULE_3__["default"])(array);
 });
 
 /***/ })

@@ -146,6 +146,7 @@ a:active {
   align-content: space-evenly;
 }
 .puzzle__block {
+  position: absolute;
   display: flex;
   width: -webkit-fill-available;
   height: -webkit-fill-available;
@@ -156,6 +157,7 @@ a:active {
   background: #fff;
   justify-content: center;
   align-items: center;
+  transition: all 0.2s;
 }
 .puzzle__current-size {
   margin-top: 25px;
