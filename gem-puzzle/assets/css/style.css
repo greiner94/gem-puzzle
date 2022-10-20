@@ -133,6 +133,9 @@ a:active {
   justify-content: center;
   column-gap: 40px;
 }
+.puzzle__indicators span {
+  font-weight: 500;
+}
 .puzzle__field {
   cursor: pointer;
   position: relative;

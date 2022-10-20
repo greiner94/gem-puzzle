@@ -289,22 +289,70 @@ function isGameWin(array) {
 /*!****************************************!*\
   !*** ./src/js/modules/movesAndTime.js ***!
   \****************************************/
-/*! exports provided: moves */
+/*! exports provided: moves, Timer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moves", function() { return moves; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return Timer; });
 function moves() {
   const movesField = document.querySelector('.puzzle__moves span');
   const gameBlocks = document.querySelectorAll('.puzzle__block');
   let movesCounter = 1;
 
-  if (!movesField.textContent) {
+  if (movesField.textContent == '0') {
     movesField.textContent = 1;
   } else {
     movesField.textContent = +movesField.textContent + 1;
   }
+}
+
+class Timer {
+  constructor() {
+    this.timeField = document.querySelector('.puzzle__time span');
+    this.sec = 0;
+    this.min = 0;
+  }
+
+  zeroChecker(num) {
+    if (num <= 9) {
+      return '0' + num;
+    }
+
+    return num;
+  }
+
+  start() {
+    this.timeField.textContent = '00 : 00';
+    this.timeField.setAttribute('data-start', true);
+    this.timeTicker = setInterval(() => {
+      if (this.timeField.getAttribute('data-start') == 'false') {
+        this.sec = 0;
+        this.min = 0;
+        clearInterval(this.timeTicker);
+      }
+
+      if (this.timeField.getAttribute('data-start') == 'false') {
+        this.timeField.textContent = '00 : 00';
+      } else {
+        this.timeField.textContent = `${this.zeroChecker(this.min)} : ${this.zeroChecker(++this.sec)}`;
+      }
+
+      if (this.sec >= 59) {
+        this.sec = -1;
+        this.min = this.min + 1;
+      }
+    }, 400);
+  }
+
+  stop() {
+    clearInterval(this.timeTicker);
+    this.timeField.setAttribute('data-start', false);
+    this.sec = 0;
+    this.min = 0;
+  }
+
 }
 
 
@@ -485,6 +533,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _renderField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderField */ "./src/js/modules/renderField.js");
 /* harmony import */ var _movesControl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./movesControl */ "./src/js/modules/movesControl.js");
 /* harmony import */ var _createField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createField */ "./src/js/modules/createField.js");
+/* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
+
 
 
 
@@ -492,6 +542,7 @@ __webpack_require__.r(__webpack_exports__);
 function sizeBtns() {
   const sizeBtns = document.querySelectorAll('.puzzle__size-variant');
   const currentSizeVariant = document.querySelector('.puzzle__current-size-variant');
+  const timer = new _movesAndTime__WEBPACK_IMPORTED_MODULE_3__["Timer"]();
   sizeBtns.forEach(elem => {
     elem.addEventListener('click', e => {
       const checkedFieldSize = +e.target.id.slice(-1);
@@ -499,6 +550,9 @@ function sizeBtns() {
       Object(_renderField__WEBPACK_IMPORTED_MODULE_0__["default"])(array);
       Object(_movesControl__WEBPACK_IMPORTED_MODULE_1__["default"])(array);
       currentSizeVariant.textContent = `${checkedFieldSize}x${checkedFieldSize}`;
+      const movesField = document.querySelector('.puzzle__moves span');
+      movesField.textContent = '0';
+      timer.stop();
     });
   });
 }
@@ -521,12 +575,12 @@ __webpack_require__.r(__webpack_exports__);
 
 function startGameBtn() {
   const startBtn = document.querySelector('#start-btn');
-  const isFirstGameStart = !document.querySelector('.puzzle__moves span').textContent;
+  const timer = new _movesAndTime__WEBPACK_IMPORTED_MODULE_0__["Timer"]();
+  const movesField = document.querySelector('.puzzle__moves span');
   startBtn.addEventListener('click', () => {
-    if (isFirstGameStart) {
-      console.log('111');
-      Object(_movesAndTime__WEBPACK_IMPORTED_MODULE_0__["moves"])();
-    }
+    timer.stop();
+    timer.start();
+    movesField.textContent = '0';
   });
 }
 
@@ -560,7 +614,8 @@ document.addEventListener('DOMContentLoaded', event => {
   Object(_modules_renderBaseStructure__WEBPACK_IMPORTED_MODULE_0__["default"])();
   Object(_modules_renderField__WEBPACK_IMPORTED_MODULE_2__["default"])(array);
   Object(_modules_movesControl__WEBPACK_IMPORTED_MODULE_3__["default"])(array);
-  Object(_modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__["default"])(); // startGameBtn();
+  Object(_modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  Object(_modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__["default"])();
 });
 
 /***/ })
