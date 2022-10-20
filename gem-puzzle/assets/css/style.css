@@ -205,3 +205,8 @@ a:active {
 .hidden {
   opacity: 0;
 }
+
+#sound-btn img {
+  width: 16px;
+  margin-bottom: -2px;
+}

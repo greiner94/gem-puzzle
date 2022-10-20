@@ -395,13 +395,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _isGameWin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isGameWin */ "./src/js/modules/isGameWin.js");
 /* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
 /* harmony import */ var _NumsAvailabledToClick__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NumsAvailabledToClick */ "./src/js/modules/NumsAvailabledToClick.js");
+/* harmony import */ var _sound__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sound */ "./src/js/modules/sound.js");
+
 
 
 
 
 function movesControl(arr) {
-  let array = arr; // console.log(NumsAvailabledToClick(array));
-
+  let array = arr;
   const fieldElems = document.querySelectorAll('.puzzle__block');
   const nunElem = document.querySelector('.hidden');
   fieldElems.forEach(elem => {
@@ -427,6 +428,7 @@ function movesControl(arr) {
         }
 
         console.log(array);
+        Object(_sound__WEBPACK_IMPORTED_MODULE_3__["playSound"])();
         Object(_isGameWin__WEBPACK_IMPORTED_MODULE_0__["default"])(array);
       }
     });
@@ -454,7 +456,7 @@ function renderBaseStructure() {
             <div class="container">
                 <div class="puzzle__btns">
                     <button class="puzzle__btn" id="start-btn">Shuffle and start</button>
-                    <button class="puzzle__btn" id="stop-btn">Stop</button>
+                    <button class="puzzle__btn" id="sound-btn" data-sound='true'><img src="./assets/icons/sound-on.svg"></img></button>
                     <button class="puzzle__btn" id="save-btn">Save</button>
                     <button class="puzzle__btn" id="result-btn">Result</button>
                 </div>
@@ -485,6 +487,9 @@ function renderBaseStructure() {
                     <span class="puzzle__size-variant" id="variant-8">8x8</span>
                 </div>
             </.div>
+            <audio id="sound">
+                <source src="./assets/sounds/sound.mp3" type="audio/mp3">
+            </audio>
         </div>
     `;
 }
@@ -588,6 +593,49 @@ function sizeBtns() {
 
 /***/ }),
 
+/***/ "./src/js/modules/sound.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/sound.js ***!
+  \*********************************/
+/*! exports provided: sound, playSound */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sound", function() { return sound; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "playSound", function() { return playSound; });
+function sound() {
+  const Sbtn = document.querySelector('#sound-btn');
+  Sbtn.addEventListener('click', () => {
+    if (Sbtn.getAttribute('data-sound') === 'true') {
+      Sbtn.setAttribute('data-sound', 'false');
+      Sbtn.firstChild.setAttribute('src', './assets/icons/sound-off.svg');
+    } else {
+      Sbtn.setAttribute('data-sound', 'true');
+      Sbtn.firstChild.setAttribute('src', './assets/icons/sound-on.svg');
+    }
+  });
+}
+
+function playSound() {
+  const Sbtn = document.querySelector('#sound-btn');
+
+  if (Sbtn.getAttribute('data-sound') === 'true') {
+    var song = document.querySelector('#sound');
+    song.volume = 1;
+
+    if (song.paused) {
+      song.play();
+    } else {
+      song.pause();
+    }
+  }
+}
+
+
+
+/***/ }),
+
 /***/ "./src/js/modules/startGameBtn.js":
 /*!****************************************!*\
   !*** ./src/js/modules/startGameBtn.js ***!
@@ -612,7 +660,6 @@ function startGameBtn() {
   const startBtn = document.querySelector('#start-btn');
   const timer = new _movesAndTime__WEBPACK_IMPORTED_MODULE_0__["Timer"]();
   const movesField = document.querySelector('.puzzle__moves span');
-  const gameField = document.querySelector('.puzzle__field');
   startBtn.addEventListener('click', () => {
     timer.stop();
     timer.start();
@@ -648,6 +695,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_movesControl__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/movesControl */ "./src/js/modules/movesControl.js");
 /* harmony import */ var _modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/sizeBtns */ "./src/js/modules/sizeBtns.js");
 /* harmony import */ var _modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/startGameBtn */ "./src/js/modules/startGameBtn.js");
+/* harmony import */ var _modules_sound__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/sound */ "./src/js/modules/sound.js");
+
 
 
 
@@ -661,6 +710,8 @@ document.addEventListener('DOMContentLoaded', event => {
   Object(_modules_movesControl__WEBPACK_IMPORTED_MODULE_3__["default"])(array);
   Object(_modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__["default"])();
   Object(_modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  Object(_modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  Object(_modules_sound__WEBPACK_IMPORTED_MODULE_6__["sound"])();
 });
 
 /***/ })
