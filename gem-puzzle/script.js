@@ -246,6 +246,29 @@ function createField(size = 4) {
 
 /***/ }),
 
+/***/ "./src/js/modules/gameBloker.js":
+/*!**************************************!*\
+  !*** ./src/js/modules/gameBloker.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function gameBloker(status) {
+  const gameField = document.querySelector('.puzzle__field');
+
+  if (status === true) {
+    gameField.classList.add('puzzle__blocked');
+  } else {
+    gameField.classList.remove('puzzle__blocked');
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (gameBloker);
+
+/***/ }),
+
 /***/ "./src/js/modules/isGameWin.js":
 /*!*************************************!*\
   !*** ./src/js/modules/isGameWin.js ***!
@@ -343,11 +366,12 @@ class Timer {
         this.sec = -1;
         this.min = this.min + 1;
       }
-    }, 400);
+    }, 1000);
   }
 
   stop() {
     clearInterval(this.timeTicker);
+    this.timeField.textContent = '00 : 00';
     this.timeField.setAttribute('data-start', false);
     this.sec = 0;
     this.min = 0;
@@ -444,7 +468,7 @@ function renderBaseStructure() {
                         <span></span>
                     </div>
                 </div>
-                <div class="puzzle__field">
+                <div class="puzzle__field puzzle__blocked">
 
                 </div>
                 <div class="puzzle__current-size">
@@ -533,7 +557,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _renderField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderField */ "./src/js/modules/renderField.js");
 /* harmony import */ var _movesControl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./movesControl */ "./src/js/modules/movesControl.js");
 /* harmony import */ var _createField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createField */ "./src/js/modules/createField.js");
-/* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
+/* harmony import */ var _gameBloker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./gameBloker */ "./src/js/modules/gameBloker.js");
+/* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
+
 
 
 
@@ -542,7 +568,7 @@ __webpack_require__.r(__webpack_exports__);
 function sizeBtns() {
   const sizeBtns = document.querySelectorAll('.puzzle__size-variant');
   const currentSizeVariant = document.querySelector('.puzzle__current-size-variant');
-  const timer = new _movesAndTime__WEBPACK_IMPORTED_MODULE_3__["Timer"]();
+  const timer = new _movesAndTime__WEBPACK_IMPORTED_MODULE_4__["Timer"]();
   sizeBtns.forEach(elem => {
     elem.addEventListener('click', e => {
       const checkedFieldSize = +e.target.id.slice(-1);
@@ -552,6 +578,7 @@ function sizeBtns() {
       currentSizeVariant.textContent = `${checkedFieldSize}x${checkedFieldSize}`;
       const movesField = document.querySelector('.puzzle__moves span');
       movesField.textContent = '0';
+      Object(_gameBloker__WEBPACK_IMPORTED_MODULE_3__["default"])(true);
       timer.stop();
     });
   });
@@ -571,16 +598,34 @@ function sizeBtns() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
+/* harmony import */ var _gameBloker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./gameBloker */ "./src/js/modules/gameBloker.js");
+/* harmony import */ var _renderField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./renderField */ "./src/js/modules/renderField.js");
+/* harmony import */ var _movesControl__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./movesControl */ "./src/js/modules/movesControl.js");
+/* harmony import */ var _createField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./createField */ "./src/js/modules/createField.js");
+
+
+
+
 
 
 function startGameBtn() {
   const startBtn = document.querySelector('#start-btn');
   const timer = new _movesAndTime__WEBPACK_IMPORTED_MODULE_0__["Timer"]();
   const movesField = document.querySelector('.puzzle__moves span');
+  const gameField = document.querySelector('.puzzle__field');
   startBtn.addEventListener('click', () => {
     timer.stop();
     timer.start();
+    Object(_gameBloker__WEBPACK_IMPORTED_MODULE_1__["default"])(false);
     movesField.textContent = '0';
+    startBtn.setAttribute('data-start', 'true');
+
+    if (startBtn.getAttribute('data-start') === 'true') {
+      const checkedFieldSize = document.querySelector('.puzzle__current-size-variant').textContent.slice(0, 1);
+      let array = Object(_createField__WEBPACK_IMPORTED_MODULE_4__["default"])(checkedFieldSize);
+      Object(_renderField__WEBPACK_IMPORTED_MODULE_2__["default"])(array);
+      Object(_movesControl__WEBPACK_IMPORTED_MODULE_3__["default"])(array);
+    }
   });
 }
 
