@@ -497,6 +497,10 @@ function renderBaseStructure() {
                     <span class="puzzle__size-variant" id="variant-8">8x8</span>
                 </div>
             </.div>
+            <div class="results hidden">
+                <div class="results__main"></div>
+                <div class="results__layout"></div>
+            </div>
             <audio id="sound">
                 <source src="./assets/sounds/sound.mp3" type="audio/mp3">
             </audio>
@@ -569,6 +573,32 @@ function renderField(array) {
 
 /***/ }),
 
+/***/ "./src/js/modules/results.js":
+/*!***********************************!*\
+  !*** ./src/js/modules/results.js ***!
+  \***********************************/
+/*! exports provided: resultsBtn */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resultsBtn", function() { return resultsBtn; });
+function resultsBtn() {
+  const resBtn = document.querySelector('#result-btn');
+  const resField = document.querySelector('.results');
+  const resLayout = document.querySelector('.results__layout');
+  resBtn.addEventListener('click', () => {
+    resField.classList.remove('hidden');
+  });
+  resLayout.addEventListener('click', () => {
+    resField.classList.add('hidden');
+  });
+}
+
+
+
+/***/ }),
+
 /***/ "./src/js/modules/save.js":
 /*!********************************!*\
   !*** ./src/js/modules/save.js ***!
@@ -605,7 +635,10 @@ function save() {
   }
 
   if (!saveBtn.getAttribute('data-save')) {
-    localStorage.clear();
+    localStorage.removeItem('array');
+    localStorage.removeItem('moves');
+    localStorage.removeItem('time');
+    localStorage.removeItem('arrayHtml');
   }
 }
 
@@ -778,6 +811,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_sound__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/sound */ "./src/js/modules/sound.js");
 /* harmony import */ var _modules_save__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/save */ "./src/js/modules/save.js");
 /* harmony import */ var _modules_gameBloker__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/gameBloker */ "./src/js/modules/gameBloker.js");
+/* harmony import */ var _modules_results__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/results */ "./src/js/modules/results.js");
+
 
 
 
@@ -797,6 +832,7 @@ document.addEventListener('DOMContentLoaded', event => {
   Object(_modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__["default"])();
   Object(_modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__["default"])();
   Object(_modules_sound__WEBPACK_IMPORTED_MODULE_6__["sound"])();
+  Object(_modules_results__WEBPACK_IMPORTED_MODULE_9__["resultsBtn"])();
   Object(_modules_save__WEBPACK_IMPORTED_MODULE_7__["save"])();
 });
 
