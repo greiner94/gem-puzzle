@@ -101,7 +101,8 @@ function NumsAvailabledToClick(array) {
 
   for (let i = 0; i < array.length; i++) {
     for (let j = 0; j < array.length; j++) {
-      if (Number.isNaN(array[i][j])) {
+      if (Number.isNaN(array[i][j]) || array[i][j] === null) {
+        array[i][j] = NaN;
         NuNis.i = i;
         NuNis.j = j;
       }
@@ -321,8 +322,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return Timer; });
 function moves() {
   const movesField = document.querySelector('.puzzle__moves span');
-  const gameBlocks = document.querySelectorAll('.puzzle__block');
-  let movesCounter = 1;
 
   if (movesField.textContent == '0') {
     movesField.textContent = 1;
@@ -332,10 +331,10 @@ function moves() {
 }
 
 class Timer {
-  constructor() {
+  constructor(min = 0, sec = 0) {
     this.timeField = document.querySelector('.puzzle__time span');
-    this.sec = 0;
-    this.min = 0;
+    this.sec = sec;
+    this.min = min;
   }
 
   zeroChecker(num) {
@@ -347,17 +346,14 @@ class Timer {
   }
 
   start() {
-    this.timeField.textContent = '00 : 00';
+    this.timeField.textContent = `${this.zeroChecker(this.min)} : ${this.zeroChecker(this.sec)}`;
     this.timeField.setAttribute('data-start', true);
     this.timeTicker = setInterval(() => {
       if (this.timeField.getAttribute('data-start') == 'false') {
+        this.timeField.textContent = '00 : 00';
         this.sec = 0;
         this.min = 0;
         clearInterval(this.timeTicker);
-      }
-
-      if (this.timeField.getAttribute('data-start') == 'false') {
-        this.timeField.textContent = '00 : 00';
       } else {
         this.timeField.textContent = `${this.zeroChecker(this.min)} : ${this.zeroChecker(++this.sec)}`;
       }
@@ -371,10 +367,12 @@ class Timer {
 
   stop() {
     clearInterval(this.timeTicker);
-    this.timeField.textContent = '00 : 00';
+    this.timeField.textContent = `${this.zeroChecker(this.min)} : ${this.zeroChecker(this.sec)}`;
     this.timeField.setAttribute('data-start', false);
-    this.sec = 0;
-    this.min = 0;
+  }
+
+  getTime() {
+    return this.timeField.textContent.split(' : ');
   }
 
 }
@@ -396,6 +394,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
 /* harmony import */ var _NumsAvailabledToClick__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NumsAvailabledToClick */ "./src/js/modules/NumsAvailabledToClick.js");
 /* harmony import */ var _sound__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sound */ "./src/js/modules/sound.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./save */ "./src/js/modules/save.js");
+
 
 
 
@@ -407,6 +407,8 @@ function movesControl(arr) {
   const nunElem = document.querySelector('.hidden');
   fieldElems.forEach(elem => {
     elem.addEventListener('click', () => {
+      Object(_save__WEBPACK_IMPORTED_MODULE_4__["saveElem"])('array', array);
+
       if (Object(_NumsAvailabledToClick__WEBPACK_IMPORTED_MODULE_2__["default"])(array).includes(+elem.textContent.trim())) {
         let nunStyles = nunElem.style.cssText;
         let elemStyles = elem.style.cssText;
@@ -456,7 +458,7 @@ function renderBaseStructure() {
             <div class="container">
                 <div class="puzzle__btns">
                     <button class="puzzle__btn" id="start-btn">Shuffle and start</button>
-                    <button class="puzzle__btn" id="sound-btn" data-sound='true'><img src="./assets/icons/sound-on.svg"></img></button>
+                    <button class="puzzle__btn" title="Sound options" id="sound-btn" data-sound='true'><img src="./assets/icons/sound-on.svg"></img></button>
                     <button class="puzzle__btn" id="save-btn">Save</button>
                     <button class="puzzle__btn" id="result-btn">Result</button>
                 </div>
@@ -507,6 +509,9 @@ function renderBaseStructure() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _gameBloker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./gameBloker */ "./src/js/modules/gameBloker.js");
+
+
 function renderField(array) {
   const field = document.querySelector('.puzzle__field');
   let arrString = '';
@@ -543,10 +548,76 @@ function renderField(array) {
     top += step;
   }
 
+  if (localStorage.getItem('arrayHtml')) {
+    field.innerHTML = localStorage.getItem('arrayHtml');
+    Object(_gameBloker__WEBPACK_IMPORTED_MODULE_0__["default"])(false);
+    return;
+  }
+
   field.innerHTML = arrString;
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (renderField);
+
+/***/ }),
+
+/***/ "./src/js/modules/save.js":
+/*!********************************!*\
+  !*** ./src/js/modules/save.js ***!
+  \********************************/
+/*! exports provided: save, saveElem */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "save", function() { return save; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "saveElem", function() { return saveElem; });
+/* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
+
+
+
+function save() {
+  const saveBtn = document.querySelector('#save-btn');
+  saveBtn.addEventListener('click', () => {
+    if (!saveBtn.classList.contains('saved')) {
+      saveBtn.classList.add('saved');
+      saveBtn.setAttribute('data-save', true);
+      document.querySelector('.hidden').click();
+    }
+  });
+
+  if (localStorage.getItem('moves')) {
+    document.querySelector('.puzzle__moves span').textContent = localStorage.getItem('moves');
+  }
+
+  if (localStorage.getItem('time')) {
+    let savedTime = localStorage.getItem('time').split(',');
+    new _movesAndTime__WEBPACK_IMPORTED_MODULE_0__["Timer"](savedTime[0].slice(1), savedTime[1].slice(1)).start();
+  }
+
+  if (!saveBtn.getAttribute('data-save')) {
+    localStorage.clear();
+  }
+}
+
+function saveElem(type, elem) {
+  if (document.querySelector('#save-btn').getAttribute('data-save')) {
+    const arrayHtml = document.querySelector('.puzzle__field').innerHTML;
+
+    switch (type) {
+      case 'array':
+        {
+          localStorage.setItem('array', JSON.stringify(elem));
+          localStorage.setItem('arrayHtml', arrayHtml);
+        }
+    }
+
+    localStorage.setItem('moves', document.querySelector('.puzzle__moves span').textContent);
+    localStorage.setItem('time', new _movesAndTime__WEBPACK_IMPORTED_MODULE_0__["Timer"]().getTime());
+  }
+}
+
+
 
 /***/ }),
 
@@ -622,7 +693,7 @@ function playSound() {
 
   if (Sbtn.getAttribute('data-sound') === 'true') {
     var song = document.querySelector('#sound');
-    song.volume = 1;
+    song.volume = 0.7;
 
     if (song.paused) {
       song.play();
@@ -696,6 +767,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/sizeBtns */ "./src/js/modules/sizeBtns.js");
 /* harmony import */ var _modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/startGameBtn */ "./src/js/modules/startGameBtn.js");
 /* harmony import */ var _modules_sound__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/sound */ "./src/js/modules/sound.js");
+/* harmony import */ var _modules_save__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/save */ "./src/js/modules/save.js");
+
 
 
 
@@ -704,14 +777,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 document.addEventListener('DOMContentLoaded', event => {
-  let array = Object(_modules_createField__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  const savedArray = localStorage.getItem('array') ? JSON.parse(localStorage.getItem('array')) : null;
+  let array = savedArray || Object(_modules_createField__WEBPACK_IMPORTED_MODULE_1__["default"])();
   Object(_modules_renderBaseStructure__WEBPACK_IMPORTED_MODULE_0__["default"])();
   Object(_modules_renderField__WEBPACK_IMPORTED_MODULE_2__["default"])(array);
   Object(_modules_movesControl__WEBPACK_IMPORTED_MODULE_3__["default"])(array);
   Object(_modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__["default"])();
   Object(_modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__["default"])();
-  Object(_modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__["default"])();
   Object(_modules_sound__WEBPACK_IMPORTED_MODULE_6__["sound"])();
+  Object(_modules_save__WEBPACK_IMPORTED_MODULE_7__["save"])();
 });
 
 /***/ })
