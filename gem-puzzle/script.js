@@ -261,9 +261,17 @@ function gameBloker(status) {
 
   if (status === true) {
     gameField.classList.add('puzzle__blocked');
+    document.querySelector('.puzzle__btn').setAttribute('data-start', 'false');
   } else {
     gameField.classList.remove('puzzle__blocked');
   }
+
+  gameField.addEventListener('click', () => {
+    if (document.querySelector('.puzzle__btn').getAttribute('data-start') === 'false') {
+      document.querySelector('.puzzle__btn').click();
+      console.log('click');
+    }
+  });
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (gameBloker);
@@ -457,7 +465,7 @@ function renderBaseStructure() {
         <div class="puzzle">
             <div class="container">
                 <div class="puzzle__btns">
-                    <button class="puzzle__btn" id="start-btn">Shuffle and start</button>
+                    <button class="puzzle__btn" id="start-btn" data-start=false >Shuffle and start</button>
                     <button class="puzzle__btn" title="Sound options" id="sound-btn" data-sound='true'><img src="./assets/icons/sound-on.svg"></img></button>
                     <button class="puzzle__btn" id="save-btn">Save</button>
                     <button class="puzzle__btn" id="result-btn">Result</button>
@@ -575,7 +583,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
 
 
-
 function save() {
   const saveBtn = document.querySelector('#save-btn');
   saveBtn.addEventListener('click', () => {
@@ -587,7 +594,9 @@ function save() {
   });
 
   if (localStorage.getItem('moves')) {
-    document.querySelector('.puzzle__moves span').textContent = localStorage.getItem('moves');
+    document.querySelector('.puzzle__moves span').textContent = localStorage.getItem('moves'); // set data-start = true on btn
+
+    document.querySelector('.puzzle__btn').setAttribute('data-start', 'true');
   }
 
   if (localStorage.getItem('time')) {
@@ -768,6 +777,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_startGameBtn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/startGameBtn */ "./src/js/modules/startGameBtn.js");
 /* harmony import */ var _modules_sound__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/sound */ "./src/js/modules/sound.js");
 /* harmony import */ var _modules_save__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/save */ "./src/js/modules/save.js");
+/* harmony import */ var _modules_gameBloker__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/gameBloker */ "./src/js/modules/gameBloker.js");
+
 
 
 
@@ -780,6 +791,7 @@ document.addEventListener('DOMContentLoaded', event => {
   const savedArray = localStorage.getItem('array') ? JSON.parse(localStorage.getItem('array')) : null;
   let array = savedArray || Object(_modules_createField__WEBPACK_IMPORTED_MODULE_1__["default"])();
   Object(_modules_renderBaseStructure__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  Object(_modules_gameBloker__WEBPACK_IMPORTED_MODULE_8__["default"])(true);
   Object(_modules_renderField__WEBPACK_IMPORTED_MODULE_2__["default"])(array);
   Object(_modules_movesControl__WEBPACK_IMPORTED_MODULE_3__["default"])(array);
   Object(_modules_sizeBtns__WEBPACK_IMPORTED_MODULE_4__["default"])();

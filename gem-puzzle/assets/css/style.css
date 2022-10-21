@@ -162,8 +162,29 @@ a:active {
   z-index: 0;
   cursor: default;
 }
+.puzzle__field::after {
+  content: "click to start";
+  position: absolute;
+  width: 602px;
+  display: flex;
+  background: rgba(65, 166, 255, 0.5098039216);
+  top: 0;
+  color: #fff;
+  font-size: 41px;
+  font-weight: 800;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: -2;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
 .puzzle__blocked:before {
   z-index: 1;
+}
+.puzzle__blocked:after {
+  z-index: 2;
 }
 .puzzle__block {
   position: absolute;
