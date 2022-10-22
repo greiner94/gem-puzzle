@@ -287,6 +287,9 @@ function gameBloker(status) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _results__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./results */ "./src/js/modules/results.js");
+
+
 function isGameWin(array) {
   let checker = 0;
 
@@ -309,6 +312,7 @@ function isGameWin(array) {
     return false;
   }
 
+  Object(_results__WEBPACK_IMPORTED_MODULE_0__["addNewResults"])();
   console.log('You WIN!');
   return true;
 }
@@ -498,7 +502,13 @@ function renderBaseStructure() {
                 </div>
             </.div>
             <div class="results hidden">
-                <div class="results__main"></div>
+                <div class="results__main">
+                    <div class="results__exit">✖</div>
+                    <h2 class="results__title">results table</h2>
+                    <div class="results__header">
+                        <span>size</span><span>time</span><span>moves</span>
+                    </div>
+                </div>
                 <div class="results__layout"></div>
             </div>
             <audio id="sound">
@@ -577,22 +587,63 @@ function renderField(array) {
 /*!***********************************!*\
   !*** ./src/js/modules/results.js ***!
   \***********************************/
-/*! exports provided: resultsBtn */
+/*! exports provided: resultsBtn, addNewResults */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resultsBtn", function() { return resultsBtn; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addNewResults", function() { return addNewResults; });
 function resultsBtn() {
   const resBtn = document.querySelector('#result-btn');
   const resField = document.querySelector('.results');
   const resLayout = document.querySelector('.results__layout');
+  const content = document.querySelector('.results__main');
   resBtn.addEventListener('click', () => {
     resField.classList.remove('hidden');
   });
   resLayout.addEventListener('click', () => {
     resField.classList.add('hidden');
   });
+  let demoResult = ['3x3', '01 : 06', '43'];
+  let demoStr = `<div class="results__table">
+                        <span>${demoResult[0]}</span>
+                        <span>${demoResult[1]}</span>
+                        <span>${demoResult[2]}</span>
+                    </div>`;
+  content.innerHTML += demoStr;
+
+  if (localStorage.getItem('results')) {
+    const resultsStorage = JSON.parse(localStorage.getItem('results'));
+    resultsStorage.forEach(elem => {
+      content.innerHTML += `
+        <div class="results__table">
+            <span>${elem[0]}</span>
+            <span>${elem[1]}</span>
+            <span>${elem[2]}</span>
+        </div>`;
+    });
+  }
+}
+
+function addNewResults() {
+  console.log('You WIN!');
+  const moves = document.querySelector('.puzzle__moves span').textContent;
+  const time = document.querySelector('.puzzle__time span').textContent;
+  const size = document.querySelector('.puzzle__current-size-variant').textContent;
+  const content = document.querySelector('.results__main');
+  const resultsStorage = localStorage.getItem('results') ? JSON.parse(localStorage.getItem('results')) : [];
+  resultsStorage.push([size, time, moves]);
+  console.log('resultsStorage ', resultsStorage);
+  resultsStorage.forEach(elem => {
+    content.innerHTML += `
+        <div class="results__table">
+            <span>${elem[0]}</span>
+            <span>${elem[1]}</span>
+            <span>${elem[2]}</span>
+        </div>`;
+  });
+  localStorage.setItem('results', JSON.stringify(resultsStorage));
 }
 
 
