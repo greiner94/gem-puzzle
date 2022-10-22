@@ -153,7 +153,7 @@ a:active {
 .puzzle__field::before {
   content: "";
   position: absolute;
-  width: 100vw;
+  width: 98vw;
   background: rgba(65, 166, 255, 0.5098039216);
   top: 0;
   left: 50%;
@@ -370,4 +370,14 @@ a:active {
   height: 100%;
   z-index: -1;
   background: rgba(0, 0, 0, 0.6352941176);
+}
+
+@media (max-width: 640px) {
+  .puzzle__field {
+    width: 300px;
+    height: 300px;
+  }
+  #result-btn {
+    margin-top: 10px;
+  }
 }
