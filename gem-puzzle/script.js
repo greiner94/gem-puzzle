@@ -226,7 +226,9 @@ function createField(size = 4) {
       localSumOfSmallest = 0;
     }
 
-    if ((globalOfSmallest + Math.floor(indexOfNuN / arr.length) + 1) % 2 === 0) {
+    console.log(globalOfSmallest);
+
+    if (globalOfSmallest % 2 === 0) {
       return true;
     } else {
       return false;
@@ -313,8 +315,24 @@ function isGameWin(array) {
   }
 
   Object(_results__WEBPACK_IMPORTED_MODULE_0__["addNewResults"])();
-  console.log('You WIN!');
+  winnerPopup();
   return true;
+}
+
+function winnerPopup() {
+  const winBlock = document.querySelector('.win');
+  const resultsBlock = document.querySelector('.results__content');
+  const layout = document.querySelector('.win__layout');
+  const moves = document.querySelector('.puzzle__moves span').textContent;
+  const time = document.querySelector('.puzzle__time span').textContent;
+  winBlock.classList.remove('hidden');
+  resultsBlock.textContent = `
+        Hooray! You solved the puzzle in ${time} and ${moves} moves!
+    `;
+  layout.addEventListener('click', () => {
+    winBlock.classList.add('hidden');
+    document.querySelector('#variant-4').click();
+  });
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (isGameWin);
@@ -511,6 +529,15 @@ function renderBaseStructure() {
                 </div>
                 <div class="results__layout"></div>
             </div>
+
+            <div class="win hidden">
+                <div class="win__main">
+                    <div class="win__exit">✖</div>
+                    <div class="results__content"></div>
+                </div>
+                <div class="win__layout"></div>
+            </div>
+
             <audio id="sound">
                 <source src="./assets/sounds/sound.mp3" type="audio/mp3">
             </audio>
