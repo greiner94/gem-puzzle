@@ -632,13 +632,6 @@ function resultsBtn() {
   resLayout.addEventListener('click', () => {
     resField.classList.add('hidden');
   });
-  let demoResult = ['3x3', '01 : 06', '43'];
-  let demoStr = `<div class="results__table">
-                        <span>${demoResult[0]}</span>
-                        <span>${demoResult[1]}</span>
-                        <span>${demoResult[2]}</span>
-                    </div>`;
-  content.innerHTML += demoStr;
 
   if (localStorage.getItem('results')) {
     const resultsStorage = JSON.parse(localStorage.getItem('results'));
@@ -650,6 +643,11 @@ function resultsBtn() {
             <span>${elem[2]}</span>
         </div>`;
     });
+  } else {
+    let emptyResult = `<div class="results__table">
+                                No games played yet :(
+                            </div>`;
+    content.innerHTML += emptyResult;
   }
 }
 
@@ -660,6 +658,10 @@ function addNewResults() {
   const size = document.querySelector('.puzzle__current-size-variant').textContent;
   const content = document.querySelector('.results__main');
   const resultsStorage = localStorage.getItem('results') ? JSON.parse(localStorage.getItem('results')) : [];
+  const showedResults = document.querySelectorAll('.results__table');
+  showedResults.forEach(elem => {
+    elem.remove();
+  });
   resultsStorage.push([size, time, moves]);
   console.log('resultsStorage ', resultsStorage);
   resultsStorage.forEach(elem => {
