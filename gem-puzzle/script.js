@@ -224,9 +224,8 @@ function createField(size = 4) {
 
       globalOfSmallest += numsArray[i] - localSumOfSmallest - 1;
       localSumOfSmallest = 0;
-    }
+    } // console.log(globalOfSmallest);
 
-    console.log(globalOfSmallest);
 
     if (globalOfSmallest % 2 === 0) {
       return true;
@@ -239,7 +238,7 @@ function createField(size = 4) {
     let res = createArray(size);
 
     if (checkArray(res)) {
-      console.log('created array field:', res);
+      // console.log('created array field:', res);
       return res;
     }
   }
@@ -271,7 +270,6 @@ function gameBloker(status) {
   gameField.addEventListener('click', () => {
     if (document.querySelector('.puzzle__btn').getAttribute('data-start') === 'false') {
       document.querySelector('.puzzle__btn').click();
-      console.log('click');
     }
   });
 }
@@ -299,7 +297,6 @@ function isGameWin(array) {
     for (let i = 0; i < array.length; i++) {
       for (let j = 0; j < array.length; j++) {
         checker = checker + 1;
-        console.log(array[i][j], checker);
 
         if (i == array.length - 1 && j == array.length - 1) {
           continue;
@@ -652,7 +649,7 @@ function resultsBtn() {
 }
 
 function addNewResults() {
-  console.log('You WIN!');
+  // console.log('You WIN!');
   const moves = document.querySelector('.puzzle__moves span').textContent;
   const time = document.querySelector('.puzzle__time span').textContent;
   const size = document.querySelector('.puzzle__current-size-variant').textContent;
@@ -662,8 +659,8 @@ function addNewResults() {
   showedResults.forEach(elem => {
     elem.remove();
   });
-  resultsStorage.push([size, time, moves]);
-  console.log('resultsStorage ', resultsStorage);
+  resultsStorage.push([size, time, moves]); // console.log('resultsStorage ',resultsStorage);
+
   resultsStorage.forEach(elem => {
     content.innerHTML += `
         <div class="results__table">
