@@ -394,7 +394,9 @@ class Timer {
 
   stop() {
     clearInterval(this.timeTicker);
-    this.timeField.textContent = `${this.zeroChecker(this.min)} : ${this.zeroChecker(this.sec)}`;
+    this.timeField.textContent = '00 : 00';
+    this.sec = 0;
+    this.min = 0;
     this.timeField.setAttribute('data-start', false);
   }
 
@@ -454,9 +456,9 @@ function movesControl(arr) {
               array[i][j] = +elem.textContent.trim();
             }
           }
-        }
+        } // console.log(array);
 
-        console.log(array);
+
         Object(_sound__WEBPACK_IMPORTED_MODULE_3__["playSound"])();
         Object(_isGameWin__WEBPACK_IMPORTED_MODULE_0__["default"])(array);
       }
