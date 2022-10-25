@@ -248,6 +248,70 @@ function createField(size = 4) {
 
 /***/ }),
 
+/***/ "./src/js/modules/drugDrop.js":
+/*!************************************!*\
+  !*** ./src/js/modules/drugDrop.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _NumsAvailabledToClick__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NumsAvailabledToClick */ "./src/js/modules/NumsAvailabledToClick.js");
+
+
+function drugDrop(arr) {
+  let array = arr;
+  const fieldElems = document.querySelectorAll('.puzzle__block');
+  const nunElem = document.querySelector('.hidden-block');
+  let currElem;
+  let correct = false;
+  fieldElems.forEach(elem => {
+    elem.draggable = true;
+    elem.addEventListener('dragstart', e => {
+      if (Object(_NumsAvailabledToClick__WEBPACK_IMPORTED_MODULE_0__["default"])(array).includes(+elem.textContent.trim())) {
+        e.dataTransfer.setData("text", e.target.value);
+        currElem = elem;
+        correct = true;
+      }
+    });
+  });
+  nunElem.addEventListener('drop', e => {
+    e.preventDefault();
+
+    if (!correct) {
+      return;
+    }
+
+    let nunStyles = nunElem.style.cssText;
+    let elemStyles = currElem.style.cssText;
+    nunElem.style.cssText = elemStyles;
+    currElem.style.cssText = nunStyles;
+
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < array.length; j++) {
+        if (array[i][j] == currElem.textContent.trim()) {
+          array[i][j] = NaN;
+          continue;
+        }
+
+        if (Number.isNaN(array[i][j])) {
+          array[i][j] = +currElem.textContent.trim();
+        }
+      }
+    }
+
+    correct = false;
+  });
+  nunElem.addEventListener('dragover', e => {
+    e.preventDefault();
+  });
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (drugDrop);
+
+/***/ }),
+
 /***/ "./src/js/modules/gameBloker.js":
 /*!**************************************!*\
   !*** ./src/js/modules/gameBloker.js ***!
@@ -424,6 +488,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _NumsAvailabledToClick__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NumsAvailabledToClick */ "./src/js/modules/NumsAvailabledToClick.js");
 /* harmony import */ var _sound__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sound */ "./src/js/modules/sound.js");
 /* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./save */ "./src/js/modules/save.js");
+/* harmony import */ var _drugDrop__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./drugDrop */ "./src/js/modules/drugDrop.js");
+
 
 
 
@@ -433,7 +499,8 @@ __webpack_require__.r(__webpack_exports__);
 function movesControl(arr) {
   let array = arr;
   const fieldElems = document.querySelectorAll('.puzzle__block');
-  const nunElem = document.querySelector('.hidden');
+  const nunElem = document.querySelector('.hidden-block');
+  Object(_drugDrop__WEBPACK_IMPORTED_MODULE_5__["default"])(array);
   fieldElems.forEach(elem => {
     elem.addEventListener('click', () => {
       Object(_save__WEBPACK_IMPORTED_MODULE_4__["saveElem"])('array', array);
@@ -576,7 +643,7 @@ function renderField(array) {
         arrString += `
                 <div 
                     class="puzzle__block 
-                    hidden"
+                    hidden-block" value="${array[i][j]}"
                     style="top: ${top}%; left: ${left}%; width: ${blockSize}%; height: ${blockSize}%;">${array[i][j]}
                 </div>
                 `;
@@ -586,7 +653,7 @@ function renderField(array) {
 
       arrString += `
             <div 
-            class="puzzle__block" 
+            class="puzzle__block" value="${array[i][j]}"
             style="top: ${top}%; left: ${left}%; width: ${blockSize}%; height: ${blockSize}%;">${array[i][j]}
         </div>
                 `;
@@ -698,7 +765,7 @@ function save() {
     if (!saveBtn.classList.contains('saved')) {
       saveBtn.classList.add('saved');
       saveBtn.setAttribute('data-save', true);
-      document.querySelector('.hidden').click();
+      document.querySelector('.hidden-block').click();
     }
   });
 

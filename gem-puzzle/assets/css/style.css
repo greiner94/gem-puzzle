@@ -199,6 +199,9 @@ a:active {
   justify-content: center;
   align-items: center;
   transition: all 0.2s;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .puzzle__block:hover {
   box-shadow: inset 0px 2px 14px 5px rgba(0, 0, 0, 0.5);
@@ -226,6 +229,10 @@ a:active {
 .hidden {
   opacity: 0;
   display: none !important;
+}
+
+.hidden-block {
+  opacity: 0;
 }
 
 #sound-btn img {
