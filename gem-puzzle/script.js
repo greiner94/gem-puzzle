@@ -261,8 +261,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _isGameWin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./isGameWin */ "./src/js/modules/isGameWin.js");
 /* harmony import */ var _movesAndTime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./movesAndTime */ "./src/js/modules/movesAndTime.js");
 /* harmony import */ var _sound__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sound */ "./src/js/modules/sound.js");
-/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./save */ "./src/js/modules/save.js");
-
 
 
 
@@ -309,6 +307,7 @@ function drugDrop(arr) {
       }
     }
 
+    Object(_movesAndTime__WEBPACK_IMPORTED_MODULE_2__["moves"])();
     Object(_sound__WEBPACK_IMPORTED_MODULE_3__["playSound"])();
     Object(_isGameWin__WEBPACK_IMPORTED_MODULE_1__["default"])(array);
     correct = false;
